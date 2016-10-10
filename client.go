@@ -13,7 +13,6 @@ const (
 	DELETE = "DELETE"
 	PUT = "PUT"
 	PATCH = "PATCH"
-	OAuthBasicToken = "22c853d518616e71914c0e7e66be61c482eb9d82"
 )
 
 type ClientRequest struct {
