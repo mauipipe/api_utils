@@ -13,6 +13,7 @@ const (
 	DELETE = "DELETE"
 	PUT = "PUT"
 	PATCH = "PATCH"
+	AddedStatusCode = 201
 )
 
 type RequestParameters struct {
@@ -96,7 +97,7 @@ func (c Client)Call(rp *RequestParameters) (*http.Response, error) {
 
 	log.Printf("%v %v %v", int(resp.StatusCode) != http.StatusOK || int(resp.StatusCode) != 201, resp.StatusCode, http.StatusOK)
 
-	if http.StatusOK <= resp.StatusCode && resp.StatusCode >= 201 {
+	if http.StatusOK <= resp.StatusCode && resp.StatusCode >= AddedStatusCode {
 		body, _ := ioutil.ReadAll(resp.Body);
 		resp.Body.Close()
 
