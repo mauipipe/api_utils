@@ -1,4 +1,4 @@
-package api
+package api_utils
 
 import (
 	"testing"
@@ -29,10 +29,11 @@ var callTests = []callTestClient{
 func TestClientRequest_NewRequestIdemPotent(t *testing.T) {
 	gomega.RegisterTestingT(t)
 
-	client := NewClientRequest()
+	request := NewClientRequest()
 
 	for _, ct := range callTests {
-		res, err := client.NewRequest(ct.method, ct.params, TestCall)
+		rp := NewRequestParameters(ct.method, ct.params, TestCall)
+		res, err := request.NewRequest(rp)
 
 		if err != nil {
 			panic(err)
@@ -56,7 +57,8 @@ func TestClientRequest_NewRequestPOST(t *testing.T) {
 	client := NewClientRequest()
 
 	for _, ct := range callTestsNotidemPotent {
-		res, err := client.NewRequest(ct.method, ct.params, TestCall)
+		rp := NewRequestParameters(ct.method, ct.params, TestCall)
+		res, err := client.NewRequest(rp)
 
 		if err != nil {
 			panic(err)

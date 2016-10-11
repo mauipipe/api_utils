@@ -1,10 +1,9 @@
-package api_test
+package api_utils
 
 import (
 	"net/http/httptest"
 	"github.com/gorilla/mux"
 	"net/http"
-	"api"
 	"testing"
 	"github.com/onsi/gomega"
 	"log"
@@ -18,14 +17,14 @@ const mockPostResponse = "{\"Title\":\"bugfix\",\"Body\":\"test body\",\"Milesto
 func Handlers() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc(api.ExpectedCall, addIssueMockHandler).Methods(api.POST)
-	r.HandleFunc(api.ExpectedCall, addIssueMockHandler).Methods(api.PUT)
+	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(POST)
+	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(PUT)
 
 	return r
 }
 
 func addIssueMockHandler(w http.ResponseWriter, r *http.Request) {
-	if ((r.Method == api.POST) || (r.Method == api.PUT)) {
+	if ((r.Method == POST) || (r.Method == PUT)) {
 		w.Header().Set("Content-Type", "application/json")
 
 		fmt.Fprint(w, mockPostResponse)
@@ -47,18 +46,24 @@ type IntegrationCallNoIdempotent struct {
 }
 
 var integrationCallNoIdempotents = []IntegrationCallNoIdempotent{
-	{method:api.POST},
-	//{method:api.PUT},
+	{method:POST},
+	{method:PUT},
 }
 
 func TestClient_Call(t *testing.T) {
 	gomega.RegisterTestingT(t)
 
-	client := api.NewClient(api.NewClientRequest())
-	uri := ts.URL + api.ExpectedCall
+	client := NewClient(NewClientRequest())
+	uri := ts.URL + ExpectedCall
 	for _, expectation := range integrationCallNoIdempotents {
-		res, err := client.Call(expectation.method, api.PostBodytParams(), uri)
-		log.Printf("%v",res);
+		rp := NewRequestParameters(expectation.method, PostBodytParams(), uri)
+		rp.AuthToken = "test_token"
+
+		res, err := client.Call(rp)
+
+		if (err != nil) {
+			log.Panicf("%v", err);
+		}
 
 		if (err != nil) {
 			log.Panic(err.Error())
