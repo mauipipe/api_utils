@@ -23,6 +23,5 @@ api_utils:
 	@if [ ! -d $(BUILDPATH)/pkg ] ; then mkdir -p $(BUILDPATH)/pkg ; fi
 	@$(GOGET) $(DEPENDENCIES)
 
-
-    go test -v ./ -covermode=count -coverprofile=coverage.out $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
-    gocyclo ./
+    @echo "Running tests"
+    go test -v ./ -covermode=count -coverprofile=coverage.out $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN && gocyclo
