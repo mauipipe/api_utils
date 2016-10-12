@@ -13,7 +13,7 @@ export GOPATH=$(BUILDPATH)
 DEPENDENCIES=\
 	github.com/gorilla/mux \
 	github.com/onsi/gomega \
-
+    github.com/fzipp/gocyclo \
 
 api_utils:
 	@echo "make";
@@ -25,3 +25,5 @@ api_utils:
 
 
 go test -v ./ -covermode=count -coverprofile=coverage.out $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+
+gocyclo ./
