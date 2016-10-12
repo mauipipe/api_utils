@@ -10,12 +10,18 @@ EXENAME=main
 
 export GOPATH=$(BUILDPATH)
 
+DEPENDENCIES=\
+	github.com/gorilla/mux \
+	github.com/onsi/gomega \
+
+
+
 api_utils:
 	@echo "make";
 	@echo $(BUILDPATH)
 
 	@echo "start building tree..."
 	@if [ ! -d $(BUILDPATH)/pkg ] ; then mkdir -p $(BUILDPATH)/pkg ; fi
+	@$(GOGET) $(DEPENDENCIES)
 
-	@$(GOGET) github.com/gorilla/mux
-	@$(GOGET) github.com/onsi/gomega
+	go test -v ./
