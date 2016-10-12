@@ -5,6 +5,7 @@ GO=$(shell which go)
 GOINSTALL=$(GO) install
 GOCLEAN=$(GO) clean
 GOGET=$(GO) get
+COVERAGE_FILE = coverage.out
 
 EXENAME=main
 
@@ -13,15 +14,24 @@ export GOPATH=$(BUILDPATH)
 DEPENDENCIES=\
 	github.com/gorilla/mux \
 	github.com/onsi/gomega \
-    github.com/fzipp/gocyclo \
+	github.com/fzipp/gocyclo \
 
-api_utils:
-	@echo "make";
-	@echo $(BUILDPATH)
+all: dependencies test clean
 
-	@echo "start building tree..."
+dependencies:
+	@echo "Retrieving dependencies"
 	@if [ ! -d $(BUILDPATH)/pkg ] ; then mkdir -p $(BUILDPATH)/pkg ; fi
 	@$(GOGET) $(DEPENDENCIES)
+	@echo "Dependencies Ok"
 
-    @echo "Running tests"
-    go test -v ./ -covermode=count -coverprofile=coverage.out $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN && gocyclo
+test:
+	@echo "Running test"
+	go test -v ./ -covermode=count -coverprofile=$(COVERAGE_FILE) $HOME/gopath/bin/goveralls -service=travis-ci -repotoken $COVERALLS_TOKEN
+	@echo "Cyclomatic complexity"
+	@echo $(BUILDPATH)bin/gocyclo
+	$(BUILDPATH)bin/gocyclo -over 12 .
+
+clean:
+	@echo "Deleting "
+	rm -rf $(COVERAGE_FILE)
+
