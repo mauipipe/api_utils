@@ -4,4 +4,7 @@ go:
   - 1.6
   - tip
 
-install: make
+install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+  - make
