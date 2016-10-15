@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/onsi/gomega"
 	"io/ioutil"
+	"net/http"
 )
 
 const (
@@ -22,8 +23,8 @@ type callTestClient struct {
 }
 
 var callTests = []callTestClient{
-	{method:GET, params:GetTestParams(), host:ExpectedHost, expectedResult:"q=b", expectedCall:ExpectedCall},
-	{method:DELETE, params:GetTestParams(), host:ExpectedHost, expectedResult:"q=b", expectedCall:ExpectedCall},
+	{method:http.MethodGet, params:GetTestParams(), host:ExpectedHost, expectedResult:"q=b", expectedCall:ExpectedCall},
+	{method:http.MethodDelete, params:GetTestParams(), host:ExpectedHost, expectedResult:"q=b", expectedCall:ExpectedCall},
 }
 
 func TestClientRequest_NewRequestIdemPotent(t *testing.T) {
@@ -47,8 +48,8 @@ func TestClientRequest_NewRequestIdemPotent(t *testing.T) {
 }
 
 var callTestsNotidemPotent = []callTestClient{
-	{method:POST, params: PostBodytParams(), host:ExpectedHost, expectedResult: PostBodytParams(), expectedCall:ExpectedCall},
-	{method:PUT, params:PostBodytParams(), host:ExpectedHost, expectedResult: PostBodytParams(), expectedCall:ExpectedCall},
+	{method:http.MethodPost, params: PostBodytParams(), host:ExpectedHost, expectedResult: PostBodytParams(), expectedCall:ExpectedCall},
+	{method:http.MethodPut, params:PostBodytParams(), host:ExpectedHost, expectedResult: PostBodytParams(), expectedCall:ExpectedCall},
 }
 
 func TestClientRequest_NewRequestPOST(t *testing.T) {

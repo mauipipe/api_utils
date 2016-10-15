@@ -8,11 +8,6 @@ import (
 )
 
 const (
-	GET = "GET"
-	POST = "POST"
-	DELETE = "DELETE"
-	PUT = "PUT"
-	PATCH = "PATCH"
 	AddedStatusCode = 201
 )
 
@@ -52,16 +47,16 @@ func (cr ClientRequest)NewRequest(rp *RequestParameters) (*http.Request, error) 
 	token := rp.AuthToken
 
 	switch method{
-	case GET:
+	case http.MethodGet:
 		fallthrough
-	case DELETE:
+	case http.MethodDelete:
 		uri := uri + "?" + rp.Params
 		req, err = http.NewRequest(method, uri, nil)
-	case POST:
+	case http.MethodPost:
 		fallthrough
-	case PATCH:
+	case http.MethodPatch:
 		fallthrough
-	case PUT:
+	case http.MethodPut:
 		log.Printf("Body is %s", rp)
 		req, err = http.NewRequest(method, uri, bytes.NewBuffer([]byte(rp.Params)))
 		req.Header.Set("Content-Type", "application/json")

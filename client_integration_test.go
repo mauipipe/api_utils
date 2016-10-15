@@ -17,14 +17,14 @@ const mockPostResponse = "{\"Title\":\"bugfix\",\"Body\":\"test body\",\"Milesto
 func Handlers() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(POST)
-	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(PUT)
+	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(http.MethodPost)
+	r.HandleFunc(ExpectedCall, addIssueMockHandler).Methods(http.MethodPut)
 
 	return r
 }
 
 func addIssueMockHandler(w http.ResponseWriter, r *http.Request) {
-	if ((r.Method == POST) || (r.Method == PUT)) {
+	if ((r.Method == http.MethodPost) || (r.Method == http.MethodPut)) {
 		w.Header().Set("Content-Type", "application/json")
 
 		fmt.Fprint(w, mockPostResponse)
@@ -46,8 +46,8 @@ type IntegrationCallNoIdempotent struct {
 }
 
 var integrationCallNoIdempotents = []IntegrationCallNoIdempotent{
-	{method:POST},
-	{method:PUT},
+	{method:http.MethodPost},
+	{method:http.MethodPut},
 }
 
 func TestClient_Call(t *testing.T) {
