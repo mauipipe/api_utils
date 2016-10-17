@@ -5,6 +5,7 @@ import (
 	"log"
 	"bytes"
 	"io/ioutil"
+	"fmt"
 )
 
 const (
@@ -64,7 +65,7 @@ func (cr ClientRequest)NewRequest(rp *RequestParameters) (*http.Request, error) 
 			req.SetBasicAuth(token, "x-oauth-basic")
 		}
 	default:
-		log.Panicf("invalid method consumed %s", method)
+		panic(fmt.Sprintf("invalid method consumed %s", method))
 	}
 
 	return req, err
