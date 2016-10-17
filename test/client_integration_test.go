@@ -1,4 +1,4 @@
-package api_utils
+package api_utils_test
 
 import (
 	"net/http/httptest"
@@ -10,9 +10,18 @@ import (
 	"io/ioutil"
 	"fmt"
 	"os"
+	"github.com/mauipipe/api_utils"
 )
 
 const mockPostResponse = "{\"Title\":\"bugfix\",\"Body\":\"test body\",\"Milestone\":0,\"Labels\":[],\"Assignees\":{\"Login\":\"mauipipe@gmail.com\",\"html_url\":\"http://google.com\"}}"
+
+func GetTestParams() string {
+	return "q=b"
+}
+
+func PostBodytParams() string {
+	return "{\"Title\":\"bugfix\",\"Body\":\"test body\",\"Milestone\":0,\"Labels\":[],\"Assignees\":{\"Login\":\"mauipipe@gmail.com\",\"html_url\":\"http://google.com\"}}"
+}
 
 func Handlers() *mux.Router {
 	r := mux.NewRouter()
@@ -53,10 +62,10 @@ var integrationCallNoIdempotents = []IntegrationCallNoIdempotent{
 func TestClient_Call(t *testing.T) {
 	gomega.RegisterTestingT(t)
 
-	client := NewClient(NewClientRequest())
+	client := api_utils.NewClient()
 	uri := ts.URL + ExpectedCall
 	for _, expectation := range integrationCallNoIdempotents {
-		rp := NewRequestParameters(expectation.method, PostBodytParams(), uri)
+		rp := api_utils.NewRequestParameters(expectation.method, PostBodytParams(), uri)
 		rp.AuthToken = "test_token"
 
 		res, err := client.Call(rp)

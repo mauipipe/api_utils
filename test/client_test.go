@@ -1,10 +1,11 @@
-package api_utils
+package api_utils_test
 
 import (
 	"testing"
 	"github.com/onsi/gomega"
 	"io/ioutil"
 	"net/http"
+	"github.com/mauipipe/api_utils"
 )
 
 const (
@@ -30,10 +31,10 @@ var callTests = []callTestClient{
 func TestClientRequest_NewRequestIdemPotent(t *testing.T) {
 	gomega.RegisterTestingT(t)
 
-	request := NewClientRequest()
+	request := api_utils.NewClientRequest()
 
 	for _, ct := range callTests {
-		rp := NewRequestParameters(ct.method, ct.params, TestCall)
+		rp := api_utils.NewRequestParameters(ct.method, ct.params, TestCall)
 		res, err := request.NewRequest(rp)
 
 		if err != nil {
@@ -55,10 +56,10 @@ var callTestsNotidemPotent = []callTestClient{
 func TestClientRequest_NewRequestPOST(t *testing.T) {
 	gomega.RegisterTestingT(t)
 
-	client := NewClientRequest()
+	client := api_utils.NewClientRequest()
 
 	for _, ct := range callTestsNotidemPotent {
-		rp := NewRequestParameters(ct.method, ct.params, TestCall)
+		rp := api_utils.NewRequestParameters(ct.method, ct.params, TestCall)
 		res, err := client.NewRequest(rp)
 
 		if err != nil {

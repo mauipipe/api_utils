@@ -104,6 +104,6 @@ func (c Client)Call(rp *RequestParameters) (*http.Response, error) {
 	return resp, err
 }
 
-func NewClient(cr RequestFactory) *Client {
-	return &Client{rf:cr, dc: http.Client{}}
+func NewClient() *Client {
+	return &Client{rf:NewClientRequest(), dc: http.Client{}}
 }
