@@ -68,6 +68,10 @@ func (cr ClientRequest)NewRequest(rp *RequestParameters) (*http.Request, error) 
 		panic(fmt.Sprintf("invalid method consumed %s", method))
 	}
 
+	if err != nil {
+		panic(err)
+	}
+
 	return req, err
 }
 
@@ -81,15 +85,8 @@ type Callable interface {
 }
 
 func (c Client)Call(rp *RequestParameters) (*http.Response, error) {
-	req, err := c.rf.NewRequest(rp)
-	if (err != nil) {
-		log.Printf("%v", err)
-	}
-
+	req, _ := c.rf.NewRequest(rp)
 	resp, err := c.dc.Do(req)
-	if (err != nil) {
-		log.Printf("%v", err)
-	}
 
 	log.Printf("%v %v %v", int(resp.StatusCode) != http.StatusOK || int(resp.StatusCode) != 201, resp.StatusCode, http.StatusOK)
 
@@ -99,6 +96,10 @@ func (c Client)Call(rp *RequestParameters) (*http.Response, error) {
 
 		log.Printf("Call %s failed with status code %d", rp.Method, resp.StatusCode)
 		log.Printf("The reasons are: %v", string(body))
+	}
+
+	if err != nil {
+		panic(err)
 	}
 
 	return resp, err
