@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"log"
 	"bytes"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
 )
 
 const (
@@ -85,24 +85,28 @@ type Callable interface {
 }
 
 func (c Client)Call(rp *RequestParameters) (*http.Response, error) {
-	req, _ := c.rf.NewRequest(rp)
+	req, err := c.rf.NewRequest(rp)
+	Errorchecker(err)
+
 	resp, err := c.dc.Do(req)
+	Errorchecker(err)
 
-	log.Printf("%v %v %v", int(resp.StatusCode) != http.StatusOK || int(resp.StatusCode) != 201, resp.StatusCode, http.StatusOK)
-
-	if http.StatusOK <= resp.StatusCode && resp.StatusCode >= AddedStatusCode {
-		body, _ := ioutil.ReadAll(resp.Body);
-		resp.Body.Close()
-
-		log.Printf("Call %s failed with status code %d", rp.Method, resp.StatusCode)
-		log.Printf("The reasons are: %v", string(body))
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	processStatusCode(resp, rp)
 
 	return resp, err
+}
+
+func processStatusCode(resp *http.Response, rp *RequestParameters) {
+	if http.StatusOK <= resp.StatusCode && resp.StatusCode >= AddedStatusCode {
+		body, err := ioutil.ReadAll(resp.Body);
+		log.Printf("Call %s failed with status code %d", rp.Method, resp.StatusCode)
+		log.Printf("The reasons are: %v", string(body))
+
+		if err != nil {
+			resp.Body.Close()
+			panic(err)
+		}
+	}
 }
 
 func NewClient() *Client {
