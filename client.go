@@ -68,9 +68,7 @@ func (cr ClientRequest)NewRequest(rp *RequestParameters) (*http.Request, error) 
 		panic(fmt.Sprintf("invalid method consumed %s", method))
 	}
 
-	if err != nil {
-		panic(err)
-	}
+	Errorchecker(err)
 
 	return req, err
 }
