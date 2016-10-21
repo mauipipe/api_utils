@@ -19,12 +19,12 @@ type RequestParameters struct {
 	AuthToken string
 }
 
-func NewRequestParameters(method string, params string, uri string) *RequestParameters {
+func NewRequestParameters(method string, params string, uri string, token string) *RequestParameters {
 	return &RequestParameters{
 		Method:method,
 		Params:params,
 		Uri:uri,
-		AuthToken:"",
+		AuthToken:token,
 	}
 }
 
@@ -78,6 +78,10 @@ type Client struct {
 	dc http.Client
 }
 
+func NewClient() *Client {
+	return &Client{rf:NewClientRequest(), dc: http.Client{}}
+}
+
 type Callable interface {
 	Call(rp *RequestParameters) (*http.Response, error)
 }
@@ -107,6 +111,4 @@ func processStatusCode(resp *http.Response, rp *RequestParameters) {
 	}
 }
 
-func NewClient() *Client {
-	return &Client{rf:NewClientRequest(), dc: http.Client{}}
-}
+
